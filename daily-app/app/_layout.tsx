@@ -1,18 +1,36 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Drawer } from 'expo-router/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { SplashScreen } from 'expo-router';
-import { useEffect } from 'react';
+
+// Importe o componente personalizado do drawer
+import CustomDrawer from '../components/CustomDrawer';
 
 // Evita que a tela de splash seja ocultada automaticamente
 SplashScreen.preventAutoHideAsync();
 
 export default function AppLayout() {
+  // Você pode adicionar a lógica de carregamento de fontes aqui, se necessário
+  const [fontsLoaded] = useFonts({
+    // Suas fontes aqui, se necessário
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  // Se as fontes não estiverem carregadas e forem necessárias, retorne null
+  if (!fontsLoaded && fontsLoaded !== undefined) {
+    return null;
+  }
 
   return (
     <Drawer
+      drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
         headerStyle: {
           backgroundColor: '#4A6FFF', // Azul mais vibrante
@@ -31,7 +49,7 @@ export default function AppLayout() {
         drawerActiveTintColor: '#4A6FFF',
         drawerInactiveTintColor: '#555',
         drawerLabelStyle: {
-          marginLeft: -16,
+          marginLeft: 0, // Aumentei de -16 para -5 para dar mais espaço entre o ícone e o texto
           fontSize: 15,
         },
         drawerItemStyle: {
@@ -46,19 +64,81 @@ export default function AppLayout() {
       <Drawer.Screen
         name="index"
         options={{
-          title: 'Início',
+          title: 'Dashboard',
           drawerIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
         }}
       />
       <Drawer.Screen
-        name="RotinaScreen" // Apontando para o arquivo RotinaScreen.tsx
+        name="RotinaScreen"
         options={{
-          title: 'Rotina Diária',
+          title: 'Rotinas',
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="repeat-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="AgendaScreen"
+        options={{
+          title: 'Agenda',
           drawerIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
           ),
+        }}
+      />
+      <Drawer.Screen
+        name="MetasScreen"
+        options={{
+          title: 'Metas',
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="flag-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="AtividadesFisicasScreen"
+        options={{
+          title: 'Atividades Físicas',
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="fitness-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="FinancasScreen"
+        options={{
+          title: 'Finanças',
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="cash-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="EstatisticasScreen"
+        options={{
+          title: 'Estatísticas',
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="stats-chart-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="SuporteScreen"
+        options={{
+          title: 'Suporte',
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="help-buoy-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      {/* Esta tela não aparecerá no menu, mas é necessária para navegação */}
+      <Drawer.Screen
+        name="ProfileScreen"
+        options={{
+          title: 'Perfil',
+          drawerItemStyle: { height: 0 }, // Esconde do drawer, pois acessamos via perfil no topo
         }}
       />
     </Drawer>
